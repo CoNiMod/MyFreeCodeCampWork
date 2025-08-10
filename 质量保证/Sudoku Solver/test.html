@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Solver - Test Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        button { margin: 5px; padding: 10px; }
+        .result { margin: 10px 0; padding: 10px; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h1>Sudoku Solver - Test Page</h1>
+    
+    <div class="test-section">
+        <h2>Test Solve Endpoint</h2>
+        <button onclick="testSolve()">Test Solve API</button>
+        <div id="solveResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Check Endpoint</h2>
+        <button onclick="testCheck()">Test Check API</button>
+        <div id="checkResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Error Cases</h2>
+        <button onclick="testErrors()">Test Error Cases</button>
+        <div id="errorResult" class="result"></div>
+    </div>
+
+    <script>
+        const baseUrl = 'http://localhost:3000';
+        
+        async function testSolve() {
+            const puzzle = '..9..5.1.85.4....2432......1...69.83.9.....6.2.2.4.1..9...5.7.2..1.4.3.9.8..7.4.1....2.5.1.243.6.7.2.1.9.4.1.2.3.4.5.6.7.8.9';
+            
+            try {
+                const response = await fetch(`${baseUrl}/api/solve`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ puzzle })
+                });
+                
+                const result = await response.json();
+                document.getElementById('solveResult').innerHTML = 
+                    `<strong>Status:</strong> ${response.status}<br>
+                     <strong>Response:</strong> ${JSON.stringify(result, null, 2)}`;
+            } catch (error) {
+                document.getElementById('solveResult').innerHTML = 
+                    `<strong>Error:</strong> ${error.message}`;
+            }
+        }
+        
+        async function testCheck() {
+            const puzzle = '..9..5.1.85.4....2432......1...69.83.9.....6.2.2.4.1..9...5.7.2..1.4.3.9.8..7.4.1....2.5.1.243.6.7.2.1.9.4.1.2.3.4.5.6.7.8.9';
+            const coordinate = 'A1';
+            const value = 1;
+            
+            try {
+                const response = await fetch(`${baseUrl}/api/check`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ puzzle, coordinate, value })
+                });
+                
+                const result = await response.json();
+                document.getElementById('checkResult').innerHTML = 
+                    `<strong>Status:</strong> ${response.status}<br>
+                     <strong>Response:</strong> ${JSON.stringify(result, null, 2)}`;
+            } catch (error) {
+                document.getElementById('checkResult').innerHTML = 
+                    `<strong>Error:</strong> ${error.message}`;
+            }
+        }
+        
+        async function testErrors() {
+            const results = [];
+            
+            // Test missing puzzle
+            try {
+                const response = await fetch(`${baseUrl}/api/solve`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+                const result = await response.json();
+                results.push(`Missing puzzle: ${result.error}`);
+            } catch (error) {
+                results.push(`Missing puzzle error: ${error.message}`);
+            }
+            
+            // Test invalid characters
+            try {
+                const response = await fetch(`${baseUrl}/api/solve`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ puzzle: 'invalid' })
+                });
+                const result = await response.json();
+                results.push(`Invalid characters: ${result.error}`);
+            } catch (error) {
+                results.push(`Invalid characters error: ${error.message}`);
+            }
+            
+            document.getElementById('errorResult').innerHTML = 
+                `<strong>Error Test Results:</strong><br>${results.join('<br>')}`;
+        }
+    </script>
+</body>
+</html>

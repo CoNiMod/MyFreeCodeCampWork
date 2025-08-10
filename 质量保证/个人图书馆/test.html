@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Library - API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 5px 5px 5px 0;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 3px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+        }
+        .book-item {
+            border: 1px solid #eee;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Personal Library API Test</h1>
+    
+    <div class="section">
+        <h2>Add a Book</h2>
+        <input type="text" id="bookTitle" placeholder="Enter book title">
+        <button onclick="addBook()">Add Book</button>
+        <div id="addBookResult" class="result"></div>
+    </div>
+
+    <div class="section">
+        <h2>Get All Books</h2>
+        <button onclick="getAllBooks()">Get All Books</button>
+        <div id="allBooksResult" class="result"></div>
+    </div>
+
+    <div class="section">
+        <h2>Get Book by ID</h2>
+        <input type="text" id="getBookId" placeholder="Enter book ID">
+        <button onclick="getBook()">Get Book</button>
+        <div id="getBookResult" class="result"></div>
+    </div>
+
+    <div class="section">
+        <h2>Add Comment to Book</h2>
+        <input type="text" id="commentBookId" placeholder="Enter book ID">
+        <textarea id="commentText" placeholder="Enter your comment"></textarea>
+        <button onclick="addComment()">Add Comment</button>
+        <div id="addCommentResult" class="result"></div>
+    </div>
+
+    <div class="section">
+        <h2>Delete Book</h2>
+        <input type="text" id="deleteBookId" placeholder="Enter book ID">
+        <button onclick="deleteBook()">Delete Book</button>
+        <div id="deleteBookResult" class="result"></div>
+    </div>
+
+    <div class="section">
+        <h2>Delete All Books</h2>
+        <button onclick="deleteAllBooks()" style="background-color: #dc3545;">Delete All Books</button>
+        <div id="deleteAllResult" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+
+        async function makeRequest(endpoint, options = {}) {
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                return await response.json();
+            } catch (error) {
+                return { error: error.message };
+            }
+        }
+
+        async function addBook() {
+            const title = document.getElementById('bookTitle').value;
+            if (!title) {
+                document.getElementById('addBookResult').textContent = 'Please enter a book title';
+                return;
+            }
+
+            const result = await makeRequest('/books', {
+                method: 'POST',
+                body: JSON.stringify({ title })
+            });
+
+            document.getElementById('addBookResult').textContent = JSON.stringify(result, null, 2);
+            if (result._id) {
+                document.getElementById('bookTitle').value = '';
+            }
+        }
+
+        async function getAllBooks() {
+            const result = await makeRequest('/books');
+            document.getElementById('allBooksResult').textContent = JSON.stringify(result, null, 2);
+        }
+
+        async function getBook() {
+            const id = document.getElementById('getBookId').value;
+            if (!id) {
+                document.getElementById('getBookResult').textContent = 'Please enter a book ID';
+                return;
+            }
+
+            const result = await makeRequest(`/books/${id}`);
+            document.getElementById('getBookResult').textContent = JSON.stringify(result, null, 2);
+        }
+
+        async function addComment() {
+            const id = document.getElementById('commentBookId').value;
+            const comment = document.getElementById('commentText').value;
+            
+            if (!id || !comment) {
+                document.getElementById('addCommentResult').textContent = 'Please enter both book ID and comment';
+                return;
+            }
+
+            const result = await makeRequest(`/books/${id}`, {
+                method: 'POST',
+                body: JSON.stringify({ comment })
+            });
+
+            document.getElementById('addCommentResult').textContent = JSON.stringify(result, null, 2);
+            if (result._id) {
+                document.getElementById('commentText').value = '';
+            }
+        }
+
+        async function deleteBook() {
+            const id = document.getElementById('deleteBookId').value;
+            if (!id) {
+                document.getElementById('deleteBookResult').textContent = 'Please enter a book ID';
+                return;
+            }
+
+            const result = await makeRequest(`/books/${id}`, {
+                method: 'DELETE'
+            });
+
+            document.getElementById('deleteBookResult').textContent = JSON.stringify(result, null, 2);
+        }
+
+        async function deleteAllBooks() {
+            if (!confirm('Are you sure you want to delete ALL books? This action cannot be undone.')) {
+                return;
+            }
+
+            const result = await makeRequest('/books', {
+                method: 'DELETE'
+            });
+
+            document.getElementById('deleteAllResult').textContent = JSON.stringify(result, null, 2);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安全的实时多人游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            overflow: hidden;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 20px;
+        }
+        
+        .game-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .game-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .game-header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .game-area {
+            display: flex;
+            flex: 1;
+            gap: 20px;
+        }
+        
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            cursor: crosshair;
+        }
+        
+        .game-info {
+            width: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        
+        .player-stats {
+            margin-bottom: 30px;
+        }
+        
+        .player-stats h3 {
+            margin-bottom: 15px;
+            color: #ffd700;
+            text-align: center;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+        
+        .stat-label {
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .stat-value {
+            color: #fff;
+        }
+        
+        .controls {
+            margin-bottom: 30px;
+        }
+        
+        .controls h3 {
+            margin-bottom: 15px;
+            color: #ffd700;
+            text-align: center;
+        }
+        
+        .control-item {
+            text-align: center;
+            margin-bottom: 8px;
+            padding: 5px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+        
+        .players-list {
+            margin-bottom: 30px;
+        }
+        
+        .players-list h3 {
+            margin-bottom: 15px;
+            color: #ffd700;
+            text-align: center;
+        }
+        
+        .player-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+        
+        .player-name {
+            color: #fff;
+        }
+        
+        .player-score {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .collectibles-info {
+            margin-bottom: 20px;
+        }
+        
+        .collectibles-info h3 {
+            margin-bottom: 15px;
+            color: #ffd700;
+            text-align: center;
+        }
+        
+        .collectible-item {
+            text-align: center;
+            margin-bottom: 8px;
+            padding: 5px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+        
+        .connection-status {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        
+        .connected {
+            background: rgba(76, 175, 80, 0.3);
+            color: #4caf50;
+        }
+        
+        .disconnected {
+            background: rgba(244, 67, 54, 0.3);
+            color: #f44336;
+        }
+        
+        .loading {
+            background: rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>🚀 安全的实时多人游戏</h1>
+            <p>使用 WASD 或方向键移动，收集物品获得分数！</p>
+        </div>
+        
+        <div class="game-area">
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+            </div>
+            
+            <div class="game-info">
+                <div class="connection-status" id="connectionStatus">
+                    <span id="statusText">连接中...</span>
+                </div>
+                
+                <div class="player-stats">
+                    <h3>🎯 玩家状态</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">分数:</span>
+                        <span class="stat-value" id="playerScore">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">排名:</span>
+                        <span class="stat-value" id="playerRank">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">位置:</span>
+                        <span class="stat-value" id="playerPosition">-</span>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <h3>🎮 控制说明</h3>
+                    <div class="control-item">W / ↑ - 向上移动</div>
+                    <div class="control-item">S / ↓ - 向下移动</div>
+                    <div class="control-item">A / ← - 向左移动</div>
+                    <div class="control-item">D / → - 向右移动</div>
+                </div>
+                
+                <div class="players-list">
+                    <h3>👥 在线玩家</h3>
+                    <div id="playersList">
+                        <div class="player-item">
+                            <span class="player-name">等待玩家加入...</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="collectibles-info">
+                    <h3>⭐ 收集物品</h3>
+                    <div id="collectiblesList">
+                        <div class="collectible-item">等待物品生成...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="game.js"></script>
+</body>
+</html>

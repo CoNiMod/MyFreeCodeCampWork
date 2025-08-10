@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>回文检测器 - Palindrome Checker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 回文检测器</h1>
+            <p class="subtitle">Palindrome Checker</p>
+        </header>
+        
+        <main>
+            <div class="input-section">
+                <label for="text-input">请输入要检测的文本：</label>
+                <input 
+                    type="text" 
+                    id="text-input" 
+                    placeholder="例如：race car, A man a plan a canal Panama..."
+                    autocomplete="off"
+                >
+                <button id="check-btn">检测回文</button>
+            </div>
+            
+            <div class="result-section">
+                <div id="result" class="result-display">
+                    输入文本并点击按钮开始检测
+                </div>
+            </div>
+            
+            <div class="examples-section">
+                <h3>💡 测试示例</h3>
+                <div class="example-buttons">
+                    <button class="example-btn" data-text="eye">eye</button>
+                    <button class="example-btn" data-text="race car">race car</button>
+                    <button class="example-btn" data-text="A man, a plan, a canal. Panama">A man, a plan, a canal. Panama</button>
+                    <button class="example-btn" data-text="never odd or even">never odd or even</button>
+                    <button class="example-btn" data-text="0_0 (: /-\ :) 0-0">0_0 (: /-\ :) 0-0</button>
+                    <button class="example-btn" data-text="nope">nope</button>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>🎯 回文：正向和反向读法相同的单词或短语</p>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

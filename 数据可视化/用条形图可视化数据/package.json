@@ -1,0 +1,28 @@
+{
+  "name": "bar-chart",
+  "version": "1.0.0",
+  "description": "Interactive bar chart visualization using D3.js for FreeCodeCamp Data Visualization certification",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "test": "echo \"Open test.html in browser to run FreeCodeCamp tests\""
+  },
+  "keywords": [
+    "d3",
+    "visualization",
+    "barchart",
+    "gdp",
+    "data-viz",
+    "freecodecamp",
+    "javascript"
+  ],
+  "author": "FreeCodeCamp Student",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/freecodecamp/data-visualization-projects"
+  },
+  "homepage": "https://bar-chart.freecodecamp.rocks"
+}

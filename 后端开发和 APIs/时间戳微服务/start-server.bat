@@ -1,0 +1,9 @@
+@echo off
+echo 启动时间戳微服务...
+echo.
+echo 正在安装依赖...
+npm install
+echo.
+echo 启动服务器...
+npm start
+pause

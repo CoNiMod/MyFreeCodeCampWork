@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue Tracker API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        button { margin: 5px; padding: 8px 15px; }
+        input, textarea { margin: 5px; padding: 5px; width: 200px; }
+        .result { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 3px; }
+        .error { background: #ffe6e6; color: #cc0000; }
+        .success { background: #e6ffe6; color: #006600; }
+    </style>
+</head>
+<body>
+    <h1>Issue Tracker API Test</h1>
+    
+    <div class="test-section">
+        <h3>Create Issue</h3>
+        <input type="text" id="createProject" placeholder="Project Name" value="test-project">
+        <input type="text" id="createTitle" placeholder="Issue Title" value="Test Issue">
+        <textarea id="createText" placeholder="Issue Text">This is a test issue</textarea>
+        <input type="text" id="createBy" placeholder="Created By" value="Test User">
+        <input type="text" id="createAssigned" placeholder="Assigned To" value="Developer">
+        <input type="text" id="createStatus" placeholder="Status" value="Open">
+        <button onclick="createIssue()">Create Issue</button>
+        <div id="createResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Get Issues</h3>
+        <input type="text" id="getProject" placeholder="Project Name" value="test-project">
+        <button onclick="getIssues()">Get Issues</button>
+        <div id="getResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Update Issue</h3>
+        <input type="text" id="updateId" placeholder="Issue ID">
+        <input type="text" id="updateProject" placeholder="Project Name" value="test-project">
+        <input type="text" id="updateTitle" placeholder="New Title">
+        <input type="text" id="updateStatus" placeholder="New Status">
+        <button onclick="updateIssue()">Update Issue</button>
+        <div id="updateResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Delete Issue</h3>
+        <input type="text" id="deleteId" placeholder="Issue ID">
+        <input type="text" id="deleteProject" placeholder="Project Name" value="test-project">
+        <button onclick="deleteIssue()">Delete Issue</button>
+        <div id="deleteResult" class="result"></div>
+    </div>
+    
+    <script>
+        const baseUrl = 'http://localhost:3000';
+        
+        function showResult(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.className = `result ${isError ? 'error' : 'success'}`;
+            element.textContent = JSON.stringify(data, null, 2);
+        }
+        
+        async function createIssue() {
+            const data = {
+                issue_title: document.getElementById('createTitle').value,
+                issue_text: document.getElementById('createText').value,
+                created_by: document.getElementById('createBy').value,
+                assigned_to: document.getElementById('createAssigned').value,
+                status_text: document.getElementById('createStatus').value
+            };
+            
+            try {
+                const response = await fetch(`${baseUrl}/api/issues/${document.getElementById('createProject').value}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                if (result.error) {
+                    showResult('createResult', result, true);
+                } else {
+                    showResult('createResult', result);
+                    // Auto-fill the update and delete ID fields
+                    document.getElementById('updateId').value = result._id;
+                    document.getElementById('deleteId').value = result._id;
+                }
+            } catch (error) {
+                showResult('createResult', { error: error.message }, true);
+            }
+        }
+        
+        async function getIssues() {
+            try {
+                const response = await fetch(`${baseUrl}/api/issues/${document.getElementById('getProject').value}`);
+                const result = await response.json();
+                showResult('getResult', result);
+            } catch (error) {
+                showResult('getResult', { error: error.message }, true);
+            }
+        }
+        
+        async function updateIssue() {
+            const data = {
+                _id: document.getElementById('updateId').value
+            };
+            
+            if (document.getElementById('updateTitle').value) {
+                data.issue_title = document.getElementById('updateTitle').value;
+            }
+            if (document.getElementById('updateStatus').value) {
+                data.status_text = document.getElementById('updateStatus').value;
+            }
+            
+            try {
+                const response = await fetch(`${baseUrl}/api/issues/${document.getElementById('updateProject').value}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                if (result.error) {
+                    showResult('updateResult', result, true);
+                } else {
+                    showResult('updateResult', result);
+                }
+            } catch (error) {
+                showResult('updateResult', { error: error.message }, true);
+            }
+        }
+        
+        async function deleteIssue() {
+            const data = {
+                _id: document.getElementById('deleteId').value
+            };
+            
+            try {
+                const response = await fetch(`${baseUrl}/api/issues/${document.getElementById('deleteProject').value}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                if (result.error) {
+                    showResult('deleteResult', result, true);
+                } else {
+                    showResult('deleteResult', result);
+                }
+            } catch (error) {
+                showResult('deleteResult', { error: error.message }, true);
+            }
+        }
+    </script>
+</body>
+</html>

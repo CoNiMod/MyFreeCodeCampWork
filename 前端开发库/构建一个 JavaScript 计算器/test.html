@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .calculator {
+            width: 320px;
+            background-color: #1c1c1c;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+        }
+        .display {
+            background-color: #1c1c1c;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 300;
+            text-align: right;
+            padding: 20px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background-color: #1c1c1c;
+        }
+        button {
+            border: none;
+            outline: none;
+            font-size: 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        button:hover {
+            filter: brightness(1.1);
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        .clear {
+            background-color: #d4d4d2;
+            color: #1c1c1c;
+            grid-column: span 2;
+        }
+        .operator {
+            background-color: #ff9500;
+            color: white;
+        }
+        .operator:hover {
+            background-color: #ffaa33;
+        }
+        .number {
+            background-color: #505050;
+            color: white;
+        }
+        .number:hover {
+            background-color: #606060;
+        }
+        .equals {
+            background-color: #ff9500;
+            color: white;
+        }
+        .equals:hover {
+            background-color: #ffaa33;
+        }
+        .zero {
+            grid-column: span 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="clear" id="clear" onclick="clearAll()">AC</button>
+            <button class="operator" id="divide" onclick="handleOperator('/')">÷</button>
+            <button class="number" id="seven" onclick="inputDigit(7)">7</button>
+            <button class="number" id="eight" onclick="inputDigit(8)">8</button>
+            <button class="number" id="nine" onclick="inputDigit(9)">9</button>
+            <button class="operator" id="multiply" onclick="handleOperator('*')">×</button>
+            <button class="number" id="four" onclick="inputDigit(4)">4</button>
+            <button class="number" id="five" onclick="inputDigit(5)">5</button>
+            <button class="number" id="six" onclick="inputDigit(6)">6</button>
+            <button class="operator" id="subtract" onclick="handleOperator('-')">-</button>
+            <button class="number" id="one" onclick="inputDigit(1)">1</button>
+            <button class="number" id="two" onclick="inputDigit(2)">2</button>
+            <button class="number" id="three" onclick="inputDigit(3)">3</button>
+            <button class="operator" id="add" onclick="handleOperator('+')">+</button>
+            <button class="number zero" id="zero" onclick="inputDigit(0)">0</button>
+            <button class="number" id="decimal" onclick="inputDecimal()">.</button>
+            <button class="equals" id="equals" onclick="handleEquals()">=</button>
+        </div>
+    </div>
+
+    <script>
+        let display = '0';
+        let prevValue = null;
+        let operator = null;
+        let waitingForOperand = false;
+        let lastResult = null;
+
+        function updateDisplay() {
+            document.getElementById('display').textContent = display;
+        }
+
+        function clearAll() {
+            display = '0';
+            prevValue = null;
+            operator = null;
+            waitingForOperand = false;
+            lastResult = null;
+            updateDisplay();
+        }
+
+        function inputDigit(digit) {
+            if (waitingForOperand) {
+                display = String(digit);
+                waitingForOperand = false;
+            } else {
+                if (display === '0' && digit === 0) {
+                    return;
+                }
+                if (display === '-') {
+                    display = '-0';
+                    return;
+                }
+                if (display === '-0' && digit === 0) {
+                    return;
+                }
+                if (display === '-0') {
+                    display = '-' + String(digit);
+                    updateDisplay();
+                    return;
+                }
+                display = display === '0' ? String(digit) : display + digit;
+            }
+            updateDisplay();
+        }
+
+        function inputDecimal() {
+            if (waitingForOperand) {
+                display = '0.';
+                waitingForOperand = false;
+            } else if (display.indexOf('.') === -1) {
+                display = display + '.';
+            }
+            updateDisplay();
+        }
+
+        function calculate(firstValue, secondValue, operation) {
+            let result;
+            switch (operation) {
+                case '+':
+                    result = firstValue + secondValue;
+                    break;
+                case '-':
+                    result = firstValue - secondValue;
+                    break;
+                case '*':
+                    result = firstValue * secondValue;
+                    break;
+                case '/':
+                    if (secondValue === 0) {
+                        return 'Error';
+                    }
+                    result = firstValue / secondValue;
+                    break;
+                default:
+                    return secondValue;
+            }
+            
+            if (result % 1 !== 0) {
+                return parseFloat(result.toFixed(4));
+            }
+            return result;
+        }
+
+        function performOperation(nextOperator) {
+            const inputValue = parseFloat(display);
+
+            if (prevValue === null) {
+                prevValue = inputValue;
+            } else if (operator) {
+                const currentValue = prevValue || 0;
+                const newValue = calculate(currentValue, inputValue, operator);
+
+                if (newValue === 'Error') {
+                    display = 'Error';
+                    prevValue = null;
+                    operator = null;
+                    waitingForOperand = true;
+                    lastResult = null;
+                    updateDisplay();
+                    return;
+                }
+
+                prevValue = newValue;
+                display = String(newValue);
+            }
+
+            waitingForOperand = true;
+            operator = nextOperator;
+            updateDisplay();
+        }
+
+        function handleOperator(nextOperator) {
+            if (nextOperator === '-' && waitingForOperand) {
+                display = '-';
+                waitingForOperand = false;
+                updateDisplay();
+                return;
+            }
+
+            if (waitingForOperand && operator && nextOperator !== '-') {
+                operator = nextOperator;
+                return;
+            }
+
+            performOperation(nextOperator);
+        }
+
+        function handleEquals() {
+            if (!operator || prevValue === null) {
+                return;
+            }
+
+            const inputValue = parseFloat(display);
+            const newValue = calculate(prevValue, inputValue, operator);
+
+            if (newValue === 'Error') {
+                display = 'Error';
+                prevValue = null;
+                operator = null;
+                waitingForOperand = true;
+                lastResult = null;
+                updateDisplay();
+                return;
+            }
+
+            display = String(newValue);
+            lastResult = newValue;
+            prevValue = null;
+            operator = null;
+            waitingForOperand = true;
+            updateDisplay();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Converter Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .success { background-color: #d4edda; }
+        .error { background-color: #f8d7da; }
+        button { margin: 5px; padding: 5px 10px; }
+    </style>
+</head>
+<body>
+    <h1>Metric-Imperial Converter Test</h1>
+    
+    <div class="test">
+        <h3>Test 1: Valid conversion (10L)</h3>
+        <button onclick="testConversion('10L')">Test</button>
+        <div id="result1"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test 2: Invalid unit (32g)</h3>
+        <button onclick="testConversion('32g')">Test</button>
+        <div id="result2"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test 3: Invalid number (3/7.2/4kg)</h3>
+        <button onclick="testConversion('3/7.2/4kg')">Test</button>
+        <div id="result3"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test 4: No number (kg)</h3>
+        <button onclick="testConversion('kg')">Test</button>
+        <div id="result4"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test 5: Fraction (1/2kg)</h3>
+        <button onclick="testConversion('1/2kg')">Test</button>
+        <div id="result5"></div>
+    </div>
+
+    <script>
+        async function testConversion(input) {
+            const testId = 'result' + input.match(/\d+/)[0];
+            const resultDiv = document.getElementById(testId);
+            
+            try {
+                const response = await fetch(`/api/convert?input=${encodeURIComponent(input)}`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<strong>Error:</strong> ${data.error}`;
+                    resultDiv.className = 'error';
+                } else {
+                    resultDiv.innerHTML = `
+                        <strong>Success:</strong><br>
+                        ${data.string}<br>
+                        initNum: ${data.initNum}, initUnit: ${data.initUnit}<br>
+                        returnNum: ${data.returnNum}, returnUnit: ${data.returnUnit}
+                    `;
+                    resultDiv.className = 'success';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<strong>Error:</strong> Could not connect to server. Make sure the server is running.`;
+                resultDiv.className = 'error';
+            }
+        }
+    </script>
+</body>
+</html>

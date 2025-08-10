@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Solver</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Sudoku Solver</h1>
+        
+        <div class="puzzle-input">
+            <h2>Enter Puzzle</h2>
+            <p>Enter a Sudoku puzzle using numbers 1-9 and periods (.) for empty cells. The puzzle must be exactly 81 characters long.</p>
+            <textarea id="puzzleInput" placeholder="Enter your 81-character Sudoku puzzle here..." rows="4"></textarea>
+            <button id="solveBtn">Solve Puzzle</button>
+        </div>
+
+        <div class="solution" id="solution" style="display: none;">
+            <h2>Solution</h2>
+            <div id="solutionText"></div>
+        </div>
+
+        <div class="placement-checker">
+            <h2>Check Placement</h2>
+            <p>Check if a number can be placed at a specific coordinate.</p>
+            <div class="check-inputs">
+                <input type="text" id="coordinateInput" placeholder="Coordinate (e.g., A1)" maxlength="2">
+                <input type="number" id="valueInput" placeholder="Value (1-9)" min="1" max="9">
+                <button id="checkBtn">Check Placement</button>
+            </div>
+            <div id="checkResult" style="display: none;"></div>
+        </div>
+
+        <div class="example-puzzles">
+            <h2>Example Puzzles</h2>
+            <p>Try these sample puzzles:</p>
+            <button class="example-btn" data-puzzle="..9..5.1.85.4....2432......1...69.83.9.....6.2.2.4.1..9...5.7.2..1.4.3.9.8..7.4.1....2.5.1.243.6.7.2.1.9.4.1.2.3.4.5.6.7.8.9">Example 1</button>
+            <button class="example-btn" data-puzzle=".................................................................................">Empty Grid</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

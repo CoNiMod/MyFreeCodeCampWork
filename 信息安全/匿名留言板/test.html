@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>匿名留言板 - 测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #229954;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>匿名留言板 - 功能测试</h1>
+    
+    <div class="test-section">
+        <h2>主题操作测试</h2>
+        <button class="test-button" onclick="testCreateThread()">测试创建主题</button>
+        <button class="test-button" onclick="testGetThreads()">测试获取主题列表</button>
+        <button class="test-button" onclick="testDeleteThread()">测试删除主题</button>
+        <button class="test-button" onclick="testReportThread()">测试报告主题</button>
+        <div id="threadResults"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>回复操作测试</h2>
+        <button class="test-button" onclick="testCreateReply()">测试创建回复</button>
+        <button class="test-button" onclick="testGetReplies()">测试获取完整主题</button>
+        <button class="test-button" onclick="testDeleteReply()">测试删除回复</button>
+        <button class="test-button" onclick="testReportReply()">测试报告回复</button>
+        <div id="replyResults"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>运行所有测试</h2>
+        <button class="test-button" onclick="runAllTests()" style="background: #e74c3c;">运行所有测试</button>
+        <div id="allTestResults"></div>
+    </div>
+
+    <script>
+        let testThreadId = null;
+        let testReplyId = null;
+        const testBoard = 'test-board-' + Date.now();
+        const testPassword = 'test-password';
+        
+        function showResult(containerId, message, isSuccess = true) {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = `result ${isSuccess ? 'success' : 'error'}`;
+            div.innerHTML = message;
+            container.appendChild(div);
+        }
+        
+        function clearResults(containerId) {
+            document.getElementById(containerId).innerHTML = '';
+        }
+        
+        async function testCreateThread() {
+            clearResults('threadResults');
+            try {
+                const response = await fetch(`/api/threads/${testBoard}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: '测试主题内容',
+                        delete_password: testPassword
+                    })
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    testThreadId = result._id;
+                    showResult('threadResults', `
+                        <strong>✓ 主题创建成功</strong><br>
+                        主题ID: ${result._id}<br>
+                        内容: ${result.text}<br>
+                        创建时间: ${new Date(result.created_on).toLocaleString()}
+                    `);
+                } else {
+                    showResult('threadResults', `<strong>✗ 主题创建失败:</strong> ${result.error}`, false);
+                }
+            } catch (error) {
+                showResult('threadResults', `<strong>✗ 请求错误:</strong> ${error.message}`, false);
+            }
+        }
+        
+        async function testGetThreads() {
+            clearResults('threadResults');
+            try {
+                const response = await fetch(`/api/threads/${testBoard}`);
+                const threads = await response.json();
+                
+                if (response.ok) {
+                    showResult('threadResults', `
+                        <strong>✓ 获取主题列表成功</strong><br>
+                        找到 ${threads.length} 个主题<br>
+                        <pre>${JSON.stringify(threads, null, 2)}</pre>
+                    `);
+                } else {
+                    showResult('threadResults', `<strong>✗ 获取主题列表失败:</strong> ${threads.error}`, false);
+                }
+            } catch (error) {
+                showResult('threadResults', `<strong>✗ 请求错误:</strong> ${error.message}`, false);
+            }
+        }
+        
+        async function testDeleteThread() {
+            if (!testThreadId) {
+                showResult('threadResults', '<strong>✗ 请先创建主题</strong>', false);
+                return;
+            }
+            
+            clearResults('threadResults');
+            try {
+                const response = await fetch(`/api/threads/${testBoard}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        thread_id: testThreadId,
+                        delete_password: testPassword
+                    })
+                });
+                
+                const result = await response.text();
+                if (result === 'success') {
+                    showResult('threadResults', '<strong>✓ 主题删除成功</strong>');
+                    testThreadId = null;
+                } else {
+                    showResult('threadResults', `<strong>✗ 主题删除失败:</strong> ${result}`, false);
+                }
+            } catch (error) {
+                showResult('threadResults', `<strong>✗ 请求错误:</strong> ${error.message}`, false);
+            }
+        }
+        
+        async function testReportThread() {
+            if (!testThreadId) {
+                showResult('threadResults', '<strong>✗ 请先创建主题</strong>', false);
+                return;
+            }
+            
+            clearResults('threadResults');
+            try {
+                const response = await fetch(`/api/threads/${testBoard}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        thread_id: testThreadId
+                    })
+                });
+                
+                const result = await response.text();
+                if (result === 'reported') {
+                    showResult('threadResults', '<strong>✓ 主题报告成功</strong>');
+                } else {
+                    showResult('threadResults', `<strong>✗ 主题报告失败:</strong> ${result}`, false);
+                }
+            } catch (error) {
+                showResult('threadResults', `<strong>✗ 请求错误:</strong> ${error.message}`, false);
+            }
+        }
+        
+        async function testCreateReply() {
+            if (!testThreadId) {
+                showResult('replyResults', '<strong>✗ 请先创建主题</strong>', false);
+                return;
+            }
+            
+            clearResults('replyResults');
+            try {
+                const response = await fetch(`/api/replies/${testBoard}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        thread_id: testThreadId,
+                        text: '测试回复内容',
+                        delete_password: testPassword
+                    })
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    testReplyId = result.replies[result.replies.length - 1]._id;
+                    showResult('replyResults', `
+                        <strong>✓ 回复创建成功</strong><br>
+                        回复ID: ${testReplyId}<br>
+                        主题ID: ${result._id}<br>
+                        回复数量: ${result.replies.length}
+                    `);
+                } else {
+                    showResult('replyResults', `<strong>✗ 回复创建失败:</strong> ${result.error}`, false);
+                }
+            } catch (error) {
+                showResult('replyResults', `<strong>✗ 请求错误:</strong> ${error.message}`, false);
+            }
+        }
+        
+        async function testGetReplies() {
+            if (!testThreadId) {
+                showResult('replyResults', '<strong>✗ 请先创建主题</strong>', false);
+                return;
+            }
+            
+            clearResults('replyResults');
+            try {
+                const response = await fetch(`/api/replies/${testBoard}?thread_id=${testThreadId}`);
+                const thread = await response.json();
+                
+                if (response.ok) {
+                    showResult('replyResults', `
+                        <strong>✓ 获取完整主题成功</strong><br>
+                        主题ID: ${thread._id}<br>
+                        内容: ${thread.text}<br>
+                        回复数量: ${thread.replies.length}<br>
+                        <pre>${JSON.stringify(thread, null, 2)}</pre>
+                    `);
+                } else {
+                    showResult('replyResults', `<strong>✗ 获取完整主题失败:</strong> ${thread.error}`, false);
+                }
+            } catch (error) {
+                showResult('replyResults', `<strong>✗ 请求错误:</strong> ${error.message}`, false);
+            }
+        }
+        
+        async function testDeleteReply() {
+            if (!testThreadId || !testReplyId) {
+                showResult('replyResults', '<strong>✗ 请先创建主题和回复</strong>', false);
+                return;
+            }
+            
+            clearResults('replyResults');
+            try {
+                const response = await fetch(`/api/replies/${testBoard}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        thread_id: testThreadId,
+                        reply_id: testReplyId,
+                        delete_password: testPassword
+                    })
+                });
+                
+                const result = await response.text();
+                if (result === 'success') {
+                    showResult('replyResults', '<strong>✓ 回复删除成功</strong>');
+                    testReplyId = null;
+                } else {
+                    showResult('replyResults', `<strong>✗ 回复删除失败:</strong> ${result}`, false);
+                }
+            } catch (error) {
+                showResult('replyResults', `<strong>✗ 请求错误:</strong> ${error.message}`, false);
+            }
+        }
+        
+        async function testReportReply() {
+            if (!testThreadId || !testReplyId) {
+                showResult('replyResults', '<strong>✗ 请先创建主题和回复</strong>', false);
+                return;
+            }
+            
+            clearResults('replyResults');
+            try {
+                const response = await fetch(`/api/replies/${testBoard}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        thread_id: testThreadId,
+                        reply_id: testReplyId
+                    })
+                });
+                
+                const result = await response.text();
+                if (result === 'reported') {
+                    showResult('replyResults', '<strong>✓ 回复报告成功</strong>');
+                } else {
+                    showResult('replyResults', `<strong>✗ 回复报告失败:</strong> ${result}`, false);
+                }
+            } catch (error) {
+                showResult('replyResults', `<strong>✗ 请求错误:</strong> ${error.message}`, false);
+            }
+        }
+        
+        async function runAllTests() {
+            clearResults('allTestResults');
+            showResult('allTestResults', '<strong>开始运行所有测试...</strong>');
+            
+            try {
+                // 1. 创建主题
+                await testCreateThread();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // 2. 获取主题列表
+                await testGetThreads();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // 3. 创建回复
+                await testCreateReply();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // 4. 获取完整主题
+                await testGetReplies();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // 5. 报告主题
+                await testReportThread();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // 6. 报告回复
+                await testReportReply();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // 7. 删除回复
+                await testDeleteReply();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // 8. 删除主题
+                await testDeleteThread();
+                
+                showResult('allTestResults', '<strong>✓ 所有测试完成！</strong>');
+            } catch (error) {
+                showResult('allTestResults', `<strong>✗ 测试过程中出现错误:</strong> ${error.message}`, false);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue Tracker</title>
+    <link rel="stylesheet" href="/public/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Issue Tracker</h1>
+        
+        <div class="form-container">
+            <h2>Create New Issue</h2>
+            <form id="issueForm">
+                <div class="form-group">
+                    <label for="projectName">Project Name:</label>
+                    <input type="text" id="projectName" name="projectName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="issueTitle">Issue Title:</label>
+                    <input type="text" id="issueTitle" name="issueTitle" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="issueText">Issue Text:</label>
+                    <textarea id="issueText" name="issueText" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="createdBy">Created By:</label>
+                    <input type="text" id="createdBy" name="createdBy" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="assignedTo">Assigned To:</label>
+                    <input type="text" id="assignedTo" name="assignedTo">
+                </div>
+                
+                <div class="form-group">
+                    <label for="statusText">Status Text:</label>
+                    <input type="text" id="statusText" name="statusText">
+                </div>
+                
+                <button type="submit">Create Issue</button>
+            </form>
+        </div>
+        
+        <div class="search-container">
+            <h2>Search Issues</h2>
+            <form id="searchForm">
+                <div class="form-group">
+                    <label for="searchProject">Project Name:</label>
+                    <input type="text" id="searchProject" name="searchProject" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="searchOpen">Open Status:</label>
+                    <select id="searchOpen" name="searchOpen">
+                        <option value="">All</option>
+                        <option value="true">Open</option>
+                        <option value="false">Closed</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="searchCreatedBy">Created By:</label>
+                    <input type="text" id="searchCreatedBy" name="searchCreatedBy">
+                </div>
+                
+                <div class="form-group">
+                    <label for="searchAssignedTo">Assigned To:</label>
+                    <input type="text" id="searchAssignedTo" name="searchAssignedTo">
+                </div>
+                
+                <button type="submit">Search Issues</button>
+            </form>
+        </div>
+        
+        <div class="issues-container">
+            <h2>Issues</h2>
+            <div id="issuesList"></div>
+        </div>
+        
+        <div class="update-container" style="display: none;">
+            <h2>Update Issue</h2>
+            <form id="updateForm">
+                <input type="hidden" id="updateId" name="updateId">
+                
+                <div class="form-group">
+                    <label for="updateIssueTitle">Issue Title:</label>
+                    <input type="text" id="updateIssueTitle" name="updateIssueTitle">
+                </div>
+                
+                <div class="form-group">
+                    <label for="updateIssueText">Issue Text:</label>
+                    <textarea id="updateIssueText" name="updateIssueText"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="updateAssignedTo">Assigned To:</label>
+                    <input type="text" id="updateAssignedTo" name="updateAssignedTo">
+                </div>
+                
+                <div class="form-group">
+                    <label for="updateStatusText">Status Text:</label>
+                    <input type="text" id="updateStatusText" name="updateStatusText">
+                </div>
+                
+                <div class="form-group">
+                    <label for="updateOpen">Open Status:</label>
+                    <select id="updateOpen" name="updateOpen">
+                        <option value="true">Open</option>
+                        <option value="false">Closed</option>
+                    </select>
+                </div>
+                
+                <button type="submit">Update Issue</button>
+                <button type="button" onclick="cancelUpdate()">Cancel</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="/public/script.js"></script>
+</body>
+</html>

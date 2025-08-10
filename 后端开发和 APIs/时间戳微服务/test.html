@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间戳微服务 - API 测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+        .error {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .requirement {
+            background: #e7f3ff;
+            border-left: 4px solid #007bff;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .requirement.passed {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+        .requirement.failed {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <h1>时间戳微服务 - API 功能测试</h1>
+    
+    <div class="test-section">
+        <h2>FreeCodeCamp 项目要求测试</h2>
+        
+        <div class="requirement" id="req1">
+            <strong>要求 1:</strong> 提交自己的项目，而不是示例的 URL
+        </div>
+        
+        <div class="requirement" id="req2">
+            <strong>要求 2:</strong> 向 /api/:date? 发送一个带有有效日期的请求，应该返回一个 JSON 对象，在这个 JSON 对象内有一个包含如 Thu, 01 Jan 1970 00:00:00 GMT 格式的输入日期的 utc 键。
+        </div>
+        
+        <div class="requirement" id="req3">
+            <strong>要求 3:</strong> 向 /api/:date? 发送一个带有有效日期的请求，应该返回一个 JSON 对象，在这个 JSON 对象内有一个包含如 Thu, 01 Jan 1970 00:00:00 GMT 格式的输入日期的 utc 键。
+        </div>
+        
+        <div class="requirement" id="req4">
+            <strong>要求 4:</strong> 向 /api/1451001600000 发送请求，应该返回 { unix: 1451001600000, utc: "Fri, 25 Dec 2015 00:00:00 GMT" }。
+        </div>
+        
+        <div class="requirement" id="req5">
+            <strong>要求 5:</strong> 程序能成功处理能被 new Date(date_string) 解析的日期。
+        </div>
+        
+        <div class="requirement" id="req6">
+            <strong>要求 6:</strong> 如果输入日期字符串无效，API 返回一个具有结构 { error : "Invalid Date" } 的对象
+        </div>
+        
+        <div class="requirement" id="req7">
+            <strong>要求 7:</strong> 如果传入的参数是空日期，将返回一个包含当前时间的 unix 键的 JSON 对象。
+        </div>
+        
+        <div class="requirement" id="req8">
+            <strong>要求 8:</strong> 如果传入的参数是空日期，将返回一个包含当前时间的 utc 键的 JSON 对象。
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>API 测试</h2>
+        
+        <h3>测试 1: 获取当前时间 (空参数)</h3>
+        <button class="test-button" onclick="testCurrentTime()">测试 /api/</button>
+        <div id="result1" class="result">点击按钮开始测试</div>
+        
+        <h3>测试 2: 有效日期字符串</h3>
+        <button class="test-button" onclick="testValidDate()">测试 /api/2023-12-25</button>
+        <div id="result2" class="result">点击按钮开始测试</div>
+        
+        <h3>测试 3: Unix 时间戳</h3>
+        <button class="test-button" onclick="testUnixTimestamp()">测试 /api/1451001600000</button>
+        <div id="result3" class="result">点击按钮开始测试</div>
+        
+        <h3>测试 4: 英文日期格式</h3>
+        <button class="test-button" onclick="testEnglishDate()">测试 /api/December 25, 2023</button>
+        <div id="result4" class="result">点击按钮开始测试</div>
+        
+        <h3>测试 5: 无效日期</h3>
+        <button class="test-button" onclick="testInvalidDate()">测试 /api/invalid-date</button>
+        <div id="result5" class="result">点击按钮开始测试</div>
+        
+        <h3>测试 6: 运行所有测试</h3>
+        <button class="test-button" onclick="runAllTests()" style="background: #28a745;">运行所有测试</button>
+    </div>
+    
+    <script>
+        const baseUrl = 'http://localhost:3000';
+        
+        async function testAPI(endpoint, resultId, requirementId = null) {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.textContent = '测试中...';
+            
+            try {
+                const response = await fetch(`${baseUrl}${endpoint}`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `错误响应:\n${JSON.stringify(data, null, 2)}`;
+                    if (requirementId) {
+                        document.getElementById(requirementId).className = 'requirement failed';
+                    }
+                } else {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `成功响应:\n${JSON.stringify(data, null, 2)}`;
+                    if (requirementId) {
+                        document.getElementById(requirementId).className = 'requirement passed';
+                    }
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `请求错误: ${error.message}`;
+                if (requirementId) {
+                    document.getElementById(requirementId).className = 'requirement failed';
+                }
+            }
+        }
+        
+        function testCurrentTime() {
+            testAPI('/api/', 'result1', 'req7');
+            testAPI('/api/', 'result1', 'req8');
+        }
+        
+        function testValidDate() {
+            testAPI('/api/2023-12-25', 'result2', 'req2');
+            testAPI('/api/2023-12-25', 'result2', 'req3');
+            testAPI('/api/2023-12-25', 'result2', 'req5');
+        }
+        
+        function testUnixTimestamp() {
+            testAPI('/api/1451001600000', 'result3', 'req4');
+        }
+        
+        function testEnglishDate() {
+            testAPI('/api/December 25, 2023', 'result4', 'req5');
+        }
+        
+        function testInvalidDate() {
+            testAPI('/api/invalid-date', 'result5', 'req6');
+        }
+        
+        async function runAllTests() {
+            // 标记要求1为通过（因为这是自己的项目）
+            document.getElementById('req1').className = 'requirement passed';
+            
+            // 运行所有测试
+            await testCurrentTime();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testValidDate();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testUnixTimestamp();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testEnglishDate();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testInvalidDate();
+            
+            // 检查所有要求是否通过
+            const requirements = document.querySelectorAll('.requirement');
+            let passedCount = 0;
+            requirements.forEach(req => {
+                if (req.classList.contains('passed')) {
+                    passedCount++;
+                }
+            });
+            
+            alert(`测试完成！\n通过: ${passedCount}/${requirements.length} 个要求`);
+        }
+        
+        // 页面加载时检查服务器状态
+        window.addEventListener('load', async function() {
+            try {
+                const response = await fetch(`${baseUrl}/api/`);
+                if (response.ok) {
+                    console.log('服务器运行正常');
+                }
+            } catch (error) {
+                console.log('无法连接到服务器，请确保服务器正在运行');
+                alert('请先启动服务器！\n运行 npm start 或使用启动脚本');
+            }
+        });
+    </script>
+</body>
+</html>

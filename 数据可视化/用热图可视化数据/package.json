@@ -1,0 +1,28 @@
+{
+  "name": "heat-map",
+  "version": "1.0.0",
+  "description": "Interactive heat map visualization using D3.js for FreeCodeCamp Data Visualization certification",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "test": "echo \"Open test.html in browser to run FreeCodeCamp tests\""
+  },
+  "keywords": [
+    "d3",
+    "visualization",
+    "heatmap",
+    "temperature",
+    "data-viz",
+    "freecodecamp",
+    "javascript"
+  ],
+  "author": "FreeCodeCamp Student",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/freecodecamp/data-visualization-projects"
+  },
+  "homepage": "https://heat-map.freecodecamp.rocks"
+}

@@ -1,0 +1,126 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+#title {
+    text-align: center;
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+#chart {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.bar {
+    fill: #3498db;
+    stroke: #2980b9;
+    stroke-width: 1px;
+    transition: opacity 0.3s ease;
+}
+
+.bar:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+#x-axis {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+#y-axis {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.tick {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.axis-label {
+    font-size: 14px;
+    font-weight: 600;
+    fill: #2c3e50;
+}
+
+#tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    max-width: 250px;
+    line-height: 1.4;
+}
+
+#tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
+}
+
+.tooltip-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #3498db;
+}
+
+.tooltip-gdp {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.tooltip-date {
+    color: #2ecc71;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    #title {
+        font-size: 2rem;
+    }
+    
+    #chart svg {
+        width: 100%;
+        height: auto;
+    }
+}

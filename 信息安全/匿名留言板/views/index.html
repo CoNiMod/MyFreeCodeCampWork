@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>匿名留言板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .board-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .thread {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .thread-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .thread-date {
+            color: #7f8c8d;
+            font-size: 12px;
+        }
+        
+        .thread-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .reply {
+            background: white;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .reply-date {
+            color: #7f8c8d;
+            font-size: 11px;
+            text-align: right;
+        }
+        
+        .delete-form {
+            display: inline;
+        }
+        
+        .delete-input {
+            width: 150px;
+            margin-right: 10px;
+        }
+        
+        .error {
+            color: #e74c3c;
+            background: #fdf2f2;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        
+        .success {
+            color: #27ae60;
+            background: #f0f9f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>匿名留言板</h1>
+        
+        <!-- 创建新主题 -->
+        <div class="board-section">
+            <h2>创建新主题</h2>
+            <form id="newThreadForm">
+                <div class="form-group">
+                    <label for="board">板块:</label>
+                    <input type="text" id="board" name="board" placeholder="输入板块名称" required>
+                </div>
+                <div class="form-group">
+                    <label for="threadText">主题内容:</label>
+                    <textarea id="threadText" name="text" placeholder="输入主题内容" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="threadPassword">删除密码:</label>
+                    <input type="text" id="threadPassword" name="delete_password" placeholder="输入删除密码" required>
+                </div>
+                <button type="submit">创建主题</button>
+            </form>
+        </div>
+        
+        <!-- 查看主题 -->
+        <div class="board-section">
+            <h2>查看主题</h2>
+            <form id="viewThreadsForm">
+                <div class="form-group">
+                    <label for="viewBoard">板块:</label>
+                    <input type="text" id="viewBoard" name="board" placeholder="输入板块名称" required>
+                </div>
+                <button type="submit">查看主题</button>
+            </form>
+            <div id="threadsList"></div>
+        </div>
+        
+        <!-- 创建回复 -->
+        <div class="board-section">
+            <h2>创建回复</h2>
+            <form id="newReplyForm">
+                <div class="form-group">
+                    <label for="replyBoard">板块:</label>
+                    <input type="text" id="replyBoard" name="board" placeholder="输入板块名称" required>
+                </div>
+                <div class="form-group">
+                    <label for="threadId">主题ID:</label>
+                    <input type="text" id="threadId" name="thread_id" placeholder="输入主题ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="replyText">回复内容:</label>
+                    <textarea id="replyText" name="text" placeholder="输入回复内容" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="replyPassword">删除密码:</label>
+                    <input type="text" id="replyPassword" name="delete_password" placeholder="输入删除密码" required>
+                </div>
+                <button type="submit">创建回复</button>
+            </form>
+        </div>
+        
+        <!-- 查看完整主题 -->
+        <div class="board-section">
+            <h2>查看完整主题</h2>
+            <form id="viewFullThreadForm">
+                <div class="form-group">
+                    <label for="fullThreadBoard">板块:</label>
+                    <input type="text" id="fullThreadBoard" name="board" placeholder="输入板块名称" required>
+                </div>
+                <div class="form-group">
+                    <label for="fullThreadId">主题ID:</label>
+                    <input type="text" id="fullThreadId" name="thread_id" placeholder="输入主题ID" required>
+                </div>
+                <button type="submit">查看完整主题</button>
+            </form>
+            <div id="fullThreadView"></div>
+        </div>
+    </div>
+
+    <script>
+        // 创建新主题
+        document.getElementById('newThreadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const board = formData.get('board');
+            const data = {
+                text: formData.get('text'),
+                delete_password: formData.get('delete_password')
+            };
+            
+            try {
+                const response = await fetch(`/api/threads/${board}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    alert('主题创建成功！');
+                    e.target.reset();
+                } else {
+                    alert('错误: ' + result.error);
+                }
+            } catch (error) {
+                alert('创建主题时出错: ' + error.message);
+            }
+        });
+        
+        // 查看主题
+        document.getElementById('viewThreadsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const board = formData.get('board');
+            
+            try {
+                const response = await fetch(`/api/threads/${board}`);
+                const threads = await response.json();
+                
+                const threadsList = document.getElementById('threadsList');
+                if (threads.length === 0) {
+                    threadsList.innerHTML = '<p>该板块暂无主题</p>';
+                    return;
+                }
+                
+                threadsList.innerHTML = threads.map(thread => `
+                    <div class="thread">
+                        <div class="thread-header">
+                            <strong>主题ID: ${thread._id}</strong>
+                            <span class="thread-date">${new Date(thread.created_on).toLocaleString()}</span>
+                        </div>
+                        <p>${thread.text}</p>
+                        <div class="thread-actions">
+                            <button onclick="reportThread('${board}', '${thread._id}')">报告</button>
+                            <form class="delete-form">
+                                <input type="text" class="delete-input" placeholder="删除密码" id="delete-${thread._id}">
+                                <button type="button" onclick="deleteThread('${board}', '${thread._id}')">删除</button>
+                            </form>
+                        </div>
+                        ${thread.replies.map(reply => `
+                            <div class="reply">
+                                <p>${reply.text}</p>
+                                <div class="reply-date">${new Date(reply.created_on).toLocaleString()}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('');
+            } catch (error) {
+                alert('获取主题时出错: ' + error.message);
+            }
+        });
+        
+        // 创建回复
+        document.getElementById('newReplyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const board = formData.get('board');
+            const data = {
+                thread_id: formData.get('thread_id'),
+                text: formData.get('text'),
+                delete_password: formData.get('delete_password')
+            };
+            
+            try {
+                const response = await fetch(`/api/replies/${board}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    alert('回复创建成功！');
+                    e.target.reset();
+                } else {
+                    alert('错误: ' + result.error);
+                }
+            } catch (error) {
+                alert('创建回复时出错: ' + error.message);
+            }
+        });
+        
+        // 查看完整主题
+        document.getElementById('viewFullThreadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const board = formData.get('board');
+            const threadId = formData.get('thread_id');
+            
+            try {
+                const response = await fetch(`/api/replies/${board}?thread_id=${threadId}`);
+                const thread = await response.json();
+                
+                const fullThreadView = document.getElementById('fullThreadView');
+                fullThreadView.innerHTML = `
+                    <div class="thread">
+                        <div class="thread-header">
+                            <strong>主题ID: ${thread._id}</strong>
+                            <span class="thread-date">${new Date(thread.created_on).toLocaleString()}</span>
+                        </div>
+                        <p>${thread.text}</p>
+                        <h3>回复 (${thread.replies.length})</h3>
+                        ${thread.replies.map(reply => `
+                            <div class="reply">
+                                <p>${reply.text}</p>
+                                <div class="reply-date">${new Date(reply.created_on).toLocaleString()}</div>
+                                <div class="thread-actions">
+                                    <button onclick="reportReply('${board}', '${thread._id}', '${reply._id}')">报告</button>
+                                    <form class="delete-form">
+                                        <input type="text" class="delete-input" placeholder="删除密码" id="reply-delete-${reply._id}">
+                                        <button type="button" onclick="deleteReply('${board}', '${thread._id}', '${reply._id}')">删除</button>
+                                    </form>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                alert('获取完整主题时出错: ' + error.message);
+            }
+        });
+        
+        // 删除主题
+        async function deleteThread(board, threadId) {
+            const password = document.getElementById(`delete-${threadId}`).value;
+            if (!password) {
+                alert('请输入删除密码');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/threads/${board}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        thread_id: threadId,
+                        delete_password: password
+                    })
+                });
+                
+                const result = await response.text();
+                if (result === 'success') {
+                    alert('主题删除成功！');
+                    document.getElementById('viewThreadsForm').dispatchEvent(new Event('submit'));
+                } else {
+                    alert('密码错误');
+                }
+            } catch (error) {
+                alert('删除主题时出错: ' + error.message);
+            }
+        }
+        
+        // 报告主题
+        async function reportThread(board, threadId) {
+            try {
+                const response = await fetch(`/api/threads/${board}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        thread_id: threadId
+                    })
+                });
+                
+                const result = await response.text();
+                if (result === 'reported') {
+                    alert('主题已报告');
+                }
+            } catch (error) {
+                alert('报告主题时出错: ' + error.message);
+            }
+        }
+        
+        // 删除回复
+        async function deleteReply(board, threadId, replyId) {
+            const password = document.getElementById(`reply-delete-${replyId}`).value;
+            if (!password) {
+                alert('请输入删除密码');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/replies/${board}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        thread_id: threadId,
+                        reply_id: replyId,
+                        delete_password: password
+                    })
+                });
+                
+                const result = await response.text();
+                if (result === 'success') {
+                    alert('回复删除成功！');
+                    document.getElementById('viewFullThreadForm').dispatchEvent(new Event('submit'));
+                } else {
+                    alert('密码错误');
+                }
+            } catch (error) {
+                alert('删除回复时出错: ' + error.message);
+            }
+        }
+        
+        // 报告回复
+        async function reportReply(board, threadId, replyId) {
+            try {
+                const response = await fetch(`/api/replies/${board}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        thread_id: threadId,
+                        reply_id: replyId
+                    })
+                });
+                
+                const result = await response.text();
+                if (result === 'reported') {
+                    alert('回复已报告');
+                }
+            } catch (error) {
+                alert('报告回复时出错: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

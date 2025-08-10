@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Checker</title>
+    <link rel="stylesheet" href="/public/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Price Checker</h1>
+        
+        <div class="form-section">
+            <h2>Check Single Stock</h2>
+            <form id="singleStockForm">
+                <input type="text" id="singleStock" placeholder="Enter stock symbol (e.g., AAPL)" required>
+                <label>
+                    <input type="checkbox" id="singleLike"> Like this stock
+                </label>
+                <button type="submit">Get Stock Price</button>
+            </form>
+            <div id="singleResult" class="result"></div>
+        </div>
+        
+        <div class="form-section">
+            <h2>Compare Two Stocks</h2>
+            <form id="twoStocksForm">
+                <input type="text" id="stock1" placeholder="First stock symbol (e.g., AAPL)" required>
+                <input type="text" id="stock2" placeholder="Second stock symbol (e.g., GOOGL)" required>
+                <label>
+                    <input type="checkbox" id="twoLike"> Like both stocks
+                </label>
+                <button type="submit">Compare Stocks</button>
+            </form>
+            <div id="twoResult" class="result"></div>
+        </div>
+        
+        <div class="info-section">
+            <h3>How to use:</h3>
+            <ul>
+                <li>Enter a stock symbol (e.g., AAPL, GOOGL, MSFT)</li>
+                <li>Check the "Like" checkbox to add your preference</li>
+                <li>Each IP address can only like a stock once</li>
+                <li>Compare two stocks to see relative popularity</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="/public/script.js"></script>
+</body>
+</html>

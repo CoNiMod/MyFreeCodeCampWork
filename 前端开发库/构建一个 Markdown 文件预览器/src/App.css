@@ -1,0 +1,216 @@
+.App {
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  color: white;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.editor-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  height: 80vh;
+}
+
+.editor-wrapper,
+.preview-wrapper {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-title,
+.preview-title {
+  background: #2c3e50;
+  color: white;
+  margin: 0;
+  padding: 15px 20px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+#editor {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 20px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: none;
+  background: #f8f9fa;
+}
+
+#editor:focus {
+  background: white;
+}
+
+.preview {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background: white;
+  line-height: 1.6;
+}
+
+/* Markdown 样式 */
+.preview h1 {
+  color: #2c3e50;
+  border-bottom: 3px solid #3498db;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.preview h2 {
+  color: #34495e;
+  border-bottom: 2px solid #e74c3c;
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+}
+
+.preview h3 {
+  color: #7f8c8d;
+  margin-bottom: 10px;
+}
+
+.preview p {
+  margin-bottom: 15px;
+}
+
+.preview code {
+  background: #f1f2f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  color: #e74c3c;
+}
+
+.preview pre {
+  background: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+  margin: 15px 0;
+}
+
+.preview pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+
+.preview blockquote {
+  border-left: 4px solid #3498db;
+  margin: 15px 0;
+  padding-left: 15px;
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+.preview ul,
+.preview ol {
+  margin: 15px 0;
+  padding-left: 30px;
+}
+
+.preview li {
+  margin-bottom: 5px;
+}
+
+.preview a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.preview a:hover {
+  text-decoration: underline;
+}
+
+.preview img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.preview table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 15px 0;
+}
+
+.preview th,
+.preview td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.preview th {
+  background: #f8f9fa;
+  font-weight: bold;
+}
+
+.preview tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .editor-container {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  
+  .editor-wrapper,
+  .preview-wrapper {
+    height: 50vh;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .App {
+    padding: 10px;
+  }
+}
+
+/* 滚动条样式 */
+.preview::-webkit-scrollbar,
+#editor::-webkit-scrollbar {
+  width: 8px;
+}
+
+.preview::-webkit-scrollbar-track,
+#editor::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.preview::-webkit-scrollbar-thumb,
+#editor::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.preview::-webkit-scrollbar-thumb:hover,
+#editor::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

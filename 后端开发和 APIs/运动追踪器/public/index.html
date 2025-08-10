@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Exercise Tracker</h1>
+            <p>Track your daily exercises and build healthy habits</p>
+        </header>
+
+        <main>
+            <!-- User Management Section -->
+            <section class="user-section">
+                <h2>User Management</h2>
+                
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" placeholder="Enter username">
+                    <button onclick="createUser()" class="btn btn-primary">Create User</button>
+                </div>
+
+                <div class="user-list">
+                    <h3>Existing Users</h3>
+                    <button onclick="loadUsers()" class="btn btn-secondary">Load Users</button>
+                    <div id="usersList" class="users-container"></div>
+                </div>
+            </section>
+
+            <!-- Exercise Management Section -->
+            <section class="exercise-section">
+                <h2>Exercise Management</h2>
+                
+                <div class="form-group">
+                    <label for="userId">User ID:</label>
+                    <input type="text" id="userId" placeholder="Enter user ID">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Exercise Description:</label>
+                    <input type="text" id="description" placeholder="e.g., Running, Swimming, etc.">
+                </div>
+
+                <div class="form-group">
+                    <label for="duration">Duration (minutes):</label>
+                    <input type="number" id="duration" placeholder="30" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Date (optional):</label>
+                    <input type="date" id="date">
+                </div>
+
+                <button onclick="addExercise()" class="btn btn-primary">Add Exercise</button>
+            </section>
+
+            <!-- Exercise Log Section -->
+            <section class="log-section">
+                <h2>Exercise Log</h2>
+                
+                <div class="form-group">
+                    <label for="logUserId">User ID:</label>
+                    <input type="text" id="logUserId" placeholder="Enter user ID">
+                </div>
+
+                <div class="form-group">
+                    <label for="fromDate">From Date (optional):</label>
+                    <input type="date" id="fromDate">
+                </div>
+
+                <div class="form-group">
+                    <label for="toDate">To Date (optional):</label>
+                    <input type="date" id="toDate">
+                </div>
+
+                <div class="form-group">
+                    <label for="limit">Limit (optional):</label>
+                    <input type="number" id="limit" placeholder="10" min="1">
+                </div>
+
+                <button onclick="getExerciseLog()" class="btn btn-primary">Get Exercise Log</button>
+
+                <div id="exerciseLog" class="log-container"></div>
+            </section>
+
+            <!-- API Testing Section -->
+            <section class="api-section">
+                <h2>API Testing</h2>
+                <div class="api-info">
+                    <h3>Available Endpoints:</h3>
+                    <ul>
+                        <li><strong>POST /api/users</strong> - Create a new user</li>
+                        <li><strong>GET /api/users</strong> - Get all users</li>
+                        <li><strong>POST /api/users/:_id/exercises</strong> - Add exercise to user</li>
+                        <li><strong>GET /api/users/:_id/logs</strong> - Get user exercise log</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <!-- Response Display -->
+        <div id="response" class="response-container"></div>
+
+        <footer>
+            <p>Built with Express.js and MongoDB</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

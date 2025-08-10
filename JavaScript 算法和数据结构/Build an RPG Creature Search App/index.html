@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Creature Search App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>RPG Creature Search App</h1>
+        
+        <div class="search-section">
+            <input type="text" id="search-input" placeholder="Enter creature name or ID..." required>
+            <button id="search-button">Search</button>
+        </div>
+
+        <div class="creature-info" id="creature-info">
+            <h2 id="creature-name">Creature Name</h2>
+            <p id="creature-id">ID: -</p>
+            
+            <div class="stat-row">
+                <span class="stat-label">Weight:</span>
+                <span id="weight">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Height:</span>
+                <span id="height">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">HP:</span>
+                <span id="hp">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Attack:</span>
+                <span id="attack">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Defense:</span>
+                <span id="defense">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Special Attack:</span>
+                <span id="special-attack">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Special Defense:</span>
+                <span id="special-defense">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Speed:</span>
+                <span id="speed">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Types:</span>
+                <div id="types"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

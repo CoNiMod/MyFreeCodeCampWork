@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+#title {
+    text-align: center;
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+#description {
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    font-weight: 400;
+}
+
+#heatmap {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.cell {
+    stroke: #fff;
+    stroke-width: 1px;
+    transition: opacity 0.3s ease;
+}
+
+.cell:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+#x-axis {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+#y-axis {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.axis-label {
+    font-size: 14px;
+    font-weight: 600;
+    fill: #2c3e50;
+}
+
+#legend {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.legend-item {
+    stroke: #fff;
+    stroke-width: 1px;
+}
+
+.legend-text {
+    font-size: 12px;
+    font-weight: 500;
+    fill: #2c3e50;
+}
+
+#tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    max-width: 250px;
+    line-height: 1.4;
+}
+
+#tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
+}
+
+.tooltip-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #3498db;
+}
+
+.tooltip-temp {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.tooltip-variance {
+    color: #2ecc71;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    #title {
+        font-size: 2rem;
+    }
+    
+    #description {
+        font-size: 1rem;
+    }
+    
+    #heatmap svg {
+        width: 100%;
+        height: auto;
+    }
+}

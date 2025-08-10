@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Checker - API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        .result { margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 3px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        input { padding: 8px; margin: 5px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <h1>Stock Price Checker - API Test Page</h1>
+    
+    <div class="test-section">
+        <h2>Test Single Stock</h2>
+        <input type="text" id="singleStock" placeholder="Stock symbol (e.g., AAPL)" value="AAPL">
+        <input type="checkbox" id="singleLike"> Like
+        <button onclick="testSingleStock()">Test Single Stock</button>
+        <div id="singleResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Two Stocks</h2>
+        <input type="text" id="stock1" placeholder="First stock" value="AAPL">
+        <input type="text" id="stock2" placeholder="Second stock" value="GOOGL">
+        <input type="checkbox" id="twoLike"> Like both
+        <button onclick="testTwoStocks()">Test Two Stocks</button>
+        <div id="twoResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Error Cases</h2>
+        <button onclick="testNoStock()">Test No Stock Parameter</button>
+        <button onclick="testInvalidStock()">Test Invalid Stock</button>
+        <div id="errorResult" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = '/api/stock-prices';
+        
+        async function makeRequest(url) {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                return { success: response.ok, data, status: response.status };
+            } catch (error) {
+                return { success: false, data: { error: error.message }, status: 500 };
+            }
+        }
+        
+        function displayResult(elementId, result) {
+            const element = document.getElementById(elementId);
+            element.className = `result ${result.success ? 'success' : 'error'}`;
+            element.innerHTML = `
+                <strong>Status: ${result.status}</strong><br>
+                <pre>${JSON.stringify(result.data, null, 2)}</pre>
+            `;
+        }
+        
+        async function testSingleStock() {
+            const stock = document.getElementById('singleStock').value;
+            const like = document.getElementById('singleLike').checked;
+            
+            let url = `${API_BASE}?stock=${encodeURIComponent(stock)}`;
+            if (like) url += '&like=true';
+            
+            const result = await makeRequest(url);
+            displayResult('singleResult', result);
+        }
+        
+        async function testTwoStocks() {
+            const stock1 = document.getElementById('stock1').value;
+            const stock2 = document.getElementById('stock2').value;
+            const like = document.getElementById('twoLike').checked;
+            
+            let url = `${API_BASE}?stock=${encodeURIComponent(stock1)}&stock=${encodeURIComponent(stock2)}`;
+            if (like) url += '&like=true';
+            
+            const result = await makeRequest(url);
+            displayResult('twoResult', result);
+        }
+        
+        async function testNoStock() {
+            const result = await makeRequest(API_BASE);
+            displayResult('errorResult', result);
+        }
+        
+        async function testInvalidStock() {
+            const result = await makeRequest(`${API_BASE}?stock=INVALID`);
+            displayResult('errorResult', result);
+        }
+    </script>
+</body>
+</html>

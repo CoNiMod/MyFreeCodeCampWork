@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间戳微服务</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>时间戳微服务</h1>
+            <p>FreeCodeCamp 后端开发项目</p>
+        </header>
+        
+        <main>
+            <section class="input-section">
+                <h2>测试时间戳转换</h2>
+                <div class="input-group">
+                    <label for="dateInput">输入日期或时间戳：</label>
+                    <input type="text" id="dateInput" placeholder="例如: 2023-12-25 或 1703462400000">
+                    <button onclick="convertDate()">转换</button>
+                </div>
+                <div class="examples">
+                    <p><strong>示例：</strong></p>
+                    <ul>
+                        <li><code>2023-12-25</code> - 日期字符串</li>
+                        <li><code>1703462400000</code> - Unix 时间戳（毫秒）</li>
+                        <li><code>December 25, 2023</code> - 英文日期</li>
+                        <li><code>25/12/2023</code> - 日/月/年格式</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section class="result-section">
+                <h2>转换结果</h2>
+                <div id="result" class="result-box">
+                    <p>输入日期或时间戳来查看转换结果</p>
+                </div>
+            </section>
+            
+            <section class="api-section">
+                <h2>API 端点</h2>
+                <div class="endpoint">
+                    <h3>获取当前时间</h3>
+                    <code>GET /api/</code>
+                    <button onclick="testCurrentTime()">测试</button>
+                </div>
+                <div class="endpoint">
+                    <h3>转换日期</h3>
+                    <code>GET /api/:date?</code>
+                    <button onclick="testDateConversion()">测试</button>
+                </div>
+                <div class="endpoint">
+                    <h3>转换时间戳</h3>
+                    <code>GET /api/1451001600000</code>
+                    <button onclick="testTimestamp()">测试</button>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>FreeCodeCamp 时间戳微服务项目</p>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
