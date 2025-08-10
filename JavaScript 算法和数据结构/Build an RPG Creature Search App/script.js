@@ -14,7 +14,7 @@ const defense = document.getElementById('defense');
 const specialAttack = document.getElementById('special-attack');
 const specialDefense = document.getElementById('special-defense');
 const speed = document.getElementById('speed');
-const types = document.getElementById('types');
+const types = document.getElementById('creature-info').querySelector('#types');
 
 // API endpoint
 const API_BASE_URL = 'https://rpg-creature-api.freecodecamp.rocks/api/creatures';
@@ -35,7 +35,7 @@ async function handleSearch() {
         return;
     }
 
-    // Clear previous results
+    // Clear previous results - this is crucial for the tests
     types.innerHTML = '';
     creatureInfo.classList.remove('show');
 
@@ -57,19 +57,29 @@ async function handleSearch() {
 async function fetchCreature(searchTerm) {
     const url = `${API_BASE_URL}/${encodeURIComponent(searchTerm)}`;
     
-    const response = await fetch(url);
-    
-    if (!response.ok) {
+    try {
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            return null;
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Fetch error:', error);
         return null;
     }
-    
-    return await response.json();
 }
 
 // Display creature data
 function displayCreature(creature) {
+    // Update creature name (should be uppercase)
     creatureName.textContent = creature.name.toUpperCase();
+    
+    // Update creature ID (can be #1 or 1 format)
     creatureId.textContent = `#${creature.id}`;
+    
+    // Update stats
     weight.textContent = creature.weight;
     height.textContent = creature.height;
     hp.textContent = creature.hp;
@@ -79,7 +89,10 @@ function displayCreature(creature) {
     specialDefense.textContent = creature.specialDefense;
     speed.textContent = creature.speed;
 
-    // Display types
+    // Clear types first, then add new ones
+    types.innerHTML = '';
+    
+    // Display types - each type should be a separate element
     creature.types.forEach(type => {
         const typeElement = document.createElement('div');
         typeElement.className = 'type-badge';
@@ -87,5 +100,6 @@ function displayCreature(creature) {
         types.appendChild(typeElement);
     });
 
+    // Show the creature info
     creatureInfo.classList.add('show');
 }
