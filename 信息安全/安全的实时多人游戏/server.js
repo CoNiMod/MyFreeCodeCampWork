@@ -65,6 +65,22 @@ for (let i = 0; i < 5; i++) {
   generateCollectible();
 }
 
+// 碰撞检测
+function checkCollision(player, collectible) {
+  const distance = Math.sqrt(
+    Math.pow(player.x - collectible.x, 2) + 
+    Math.pow(player.y - collectible.y, 2)
+  );
+  return distance < 30; // 碰撞半径
+}
+
+// 计算玩家排名
+function calculatePlayerRank(player, allPlayers) {
+  const sortedPlayers = allPlayers.sort((a, b) => b.score - a.score);
+  const rank = sortedPlayers.findIndex(p => p.id === player.id) + 1;
+  return `Rank: ${rank}/${allPlayers.length}`;
+}
+
 // Socket.io连接处理
 io.on('connection', (socket) => {
   console.log('玩家连接:', socket.id);
@@ -99,6 +115,7 @@ io.on('connection', (socket) => {
     const player = gameState.players.get(playerId);
     
     if (player) {
+      // 根据方向移动玩家
       switch (direction) {
         case 'up':
           player.y = Math.max(0, player.y - amount);
@@ -164,22 +181,6 @@ io.on('connection', (socket) => {
     }
   });
 });
-
-// 碰撞检测
-function checkCollision(player, collectible) {
-  const distance = Math.sqrt(
-    Math.pow(player.x - collectible.x, 2) + 
-    Math.pow(player.y - collectible.y, 2)
-  );
-  return distance < 30; // 碰撞半径
-}
-
-// 计算玩家排名
-function calculatePlayerRank(player, allPlayers) {
-  const sortedPlayers = allPlayers.sort((a, b) => b.score - a.score);
-  const rank = sortedPlayers.findIndex(p => p.id === player.id) + 1;
-  return `Rank: ${rank}/${allPlayers.length}`;
-}
 
 // 路由
 app.get('/', (req, res) => {
