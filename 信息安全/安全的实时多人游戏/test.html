@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>安全的实时多人游戏 - 测试页面</h1>
+    
+    <div class="test-section">
+        <h2>连接测试</h2>
+        <button class="test-button" onclick="testConnection()">测试连接</button>
+        <div id="connectionResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>游戏功能测试</h2>
+        <button class="test-button" onclick="testGameFeatures()">测试游戏功能</button>
+        <div id="gameFeaturesResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>安全测试</h2>
+        <button class="test-button" onclick="testSecurity()">测试安全特性</button>
+        <div id="securityResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>完整测试</h2>
+        <button class="test-button" onclick="runAllTests()">运行所有测试</button>
+        <div id="allTestsResult"></div>
+    </div>
+
+    <script>
+        function showResult(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="test-result ${type}">${message}</div>`;
+        }
+
+        async function testConnection() {
+            try {
+                const response = await fetch('/');
+                if (response.ok) {
+                    showResult('connectionResult', '✅ 连接成功 - 服务器正常运行', 'success');
+                } else {
+                    showResult('connectionResult', '❌ 连接失败 - 服务器响应错误', 'error');
+                }
+            } catch (error) {
+                showResult('connectionResult', `❌ 连接失败 - ${error.message}`, 'error');
+            }
+        }
+
+        async function testGameFeatures() {
+            let results = [];
+            
+            try {
+                // 测试Player类
+                const playerModule = await import('./Player.mjs');
+                const player = new playerModule.Player(1, 0, 100, 100);
+                
+                if (player.id === 1 && player.score === 0 && player.x === 100 && player.y === 100) {
+                    results.push('✅ Player类创建成功');
+                } else {
+                    results.push('❌ Player类创建失败');
+                }
+                
+                // 测试移动功能
+                player.movePlayer('up', 10);
+                if (player.y === 90) {
+                    results.push('✅ 移动功能正常');
+                } else {
+                    results.push('❌ 移动功能异常');
+                }
+                
+                // 测试排名计算
+                const allPlayers = [
+                    { id: 1, score: 10 },
+                    { id: 2, score: 20 },
+                    { id: 3, score: 5 }
+                ];
+                const rank = player.calculateRank(allPlayers);
+                if (rank === 'Rank: 2/3') {
+                    results.push('✅ 排名计算正常');
+                } else {
+                    results.push('❌ 排名计算异常');
+                }
+                
+            } catch (error) {
+                results.push(`❌ 游戏功能测试失败: ${error.message}`);
+            }
+            
+            try {
+                // 测试Collectible类
+                const collectibleModule = await import('./Collectible.mjs');
+                const collectible = new collectibleModule.Collectible(1, 10, 200, 200);
+                
+                if (collectible.id === 1 && collectible.value === 10 && collectible.x === 200 && collectible.y === 200) {
+                    results.push('✅ Collectible类创建成功');
+                } else {
+                    results.push('❌ Collectible类创建失败');
+                }
+                
+            } catch (error) {
+                results.push(`❌ Collectible类测试失败: ${error.message}`);
+            }
+            
+            showResult('gameFeaturesResult', results.join('<br>'), 'info');
+        }
+
+        async function testSecurity() {
+            let results = [];
+            
+            try {
+                // 测试安全头
+                const response = await fetch('/');
+                const headers = response.headers;
+                
+                if (headers.get('X-Content-Type-Options') === 'nosniff') {
+                    results.push('✅ MIME类型嗅探防护正常');
+                } else {
+                    results.push('❌ MIME类型嗅探防护缺失');
+                }
+                
+                if (headers.get('X-XSS-Protection') === '1; mode=block') {
+                    results.push('✅ XSS防护正常');
+                } else {
+                    results.push('❌ XSS防护缺失');
+                }
+                
+                if (headers.get('Cache-Control') && headers.get('Cache-Control').includes('no-cache')) {
+                    results.push('✅ 缓存控制正常');
+                } else {
+                    results.push('❌ 缓存控制缺失');
+                }
+                
+                if (headers.get('X-Powered-By') === 'PHP 7.4.3') {
+                    results.push('✅ 自定义Powered-By头正常');
+                } else {
+                    results.push('❌ 自定义Powered-By头缺失');
+                }
+                
+            } catch (error) {
+                results.push(`❌ 安全测试失败: ${error.message}`);
+            }
+            
+            showResult('securityResult', results.join('<br>'), 'info');
+        }
+
+        async function runAllTests() {
+            showResult('allTestsResult', '🔄 正在运行所有测试...', 'info');
+            
+            await testConnection();
+            await testGameFeatures();
+            await testSecurity();
+            
+            showResult('allTestsResult', '✅ 所有测试完成！请查看上方各测试结果。', 'success');
+        }
+
+        // 页面加载完成后自动运行连接测试
+        window.addEventListener('load', testConnection);
+    </script>
+</body>
+</html>
