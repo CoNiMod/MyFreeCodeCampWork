@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 技术文档</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav id="navbar">
+        <header>
+            <h1>JavaScript 技术文档</h1>
+        </header>
+        <a href="#介绍" class="nav-link">介绍</a>
+        <a href="#变量和数据类型" class="nav-link">变量和数据类型</a>
+        <a href="#函数和对象" class="nav-link">函数和对象</a>
+        <a href="#数组和循环" class="nav-link">数组和循环</a>
+        <a href="#DOM操作" class="nav-link">DOM操作</a>
+    </nav>
+
+    <main id="main-doc">
+        <section class="main-section" id="介绍">
+            <header>
+                <h2>介绍</h2>
+            </header>
+            <p>JavaScript 是一种高级的、解释型的编程语言，主要用于网页开发。</p>
+            <p>它最初由 Brendan Eich 在 1995 年为 Netscape Navigator 浏览器创建。</p>
+            <p>JavaScript 是一种动态类型语言，支持面向对象、命令式和函数式编程范式。</p>
+            <p>在现代 Web 开发中，JavaScript 已经成为不可或缺的技术。</p>
+            <p>它可以在浏览器中运行，也可以在服务器端运行（Node.js）。</p>
+            <code>console.log("Hello, World!");</code>
+            <code>let message = "Welcome to JavaScript";</code>
+            <ul>
+                <li>客户端脚本语言</li>
+                <li>支持异步编程</li>
+                <li>丰富的生态系统</li>
+            </ul>
+        </section>
+
+        <section class="main-section" id="变量和数据类型">
+            <header>
+                <h2>变量和数据类型</h2>
+            </header>
+            <p>JavaScript 中的变量用于存储数据值。</p>
+            <p>使用 <code>let</code>、<code>const</code> 或 <code>var</code> 关键字声明变量。</p>
+            <p>JavaScript 有七种基本数据类型：</p>
+            <ul>
+                <li>Number（数字）</li>
+                <li>String（字符串）</li>
+                <li>Boolean（布尔值）</li>
+                <li>Undefined（未定义）</li>
+                <li>Null（空值）</li>
+                <li>Symbol（符号）</li>
+                <li>Object（对象）</li>
+            </ul>
+            <code>let name = "张三";</code>
+            <code>const age = 25;</code>
+            <code>let isStudent = true;</code>
+        </section>
+
+        <section class="main-section" id="函数和对象">
+            <header>
+                <h2>函数和对象</h2>
+            </header>
+            <p>函数是 JavaScript 中的一等公民，可以像变量一样传递和使用。</p>
+            <p>对象是键值对的集合，用于表示复杂的数据结构。</p>
+            <p>函数可以通过多种方式定义：函数声明、函数表达式、箭头函数等。</p>
+            <p>对象可以通过字面量语法、构造函数或 Object.create() 方法创建。</p>
+            <code>function greet(name) { return `Hello, ${name}!`; }</code>
+            <code>const person = { name: "李四", age: 30 };</code>
+            <ul>
+                <li>函数声明</li>
+                <li>函数表达式</li>
+                <li>箭头函数</li>
+                <li>对象字面量</li>
+                <li>构造函数</li>
+            </ul>
+        </section>
+
+        <section class="main-section" id="数组和循环">
+            <header>
+                <h2>数组和循环</h2>
+            </header>
+            <p>数组是 JavaScript 中用于存储多个值的有序集合。</p>
+            <p>数组可以包含不同类型的元素，并且长度可以动态变化。</p>
+            <p>JavaScript 提供了多种循环方式来遍历数组和对象。</p>
+            <p>常用的循环方法包括 for、while、forEach、map、filter 等。</p>
+            <code>const numbers = [1, 2, 3, 4, 5];</code>
+            <code>for (let i = 0; i < numbers.length; i++) { console.log(numbers[i]); }</code>
+            <ul>
+                <li>for 循环</li>
+                <li>while 循环</li>
+                <li>forEach 方法</li>
+                <li>map 方法</li>
+                <li>filter 方法</li>
+            </ul>
+        </section>
+
+        <section class="main-section" id="DOM操作">
+            <header>
+                <h2>DOM操作</h2>
+            </header>
+            <p>DOM（文档对象模型）是 HTML 文档的编程接口。</p>
+            <p>JavaScript 可以通过 DOM API 来操作网页的内容、结构和样式。</p>
+            <p>常见的 DOM 操作包括：选择元素、修改内容、添加/删除元素、事件处理等。</p>
+            <p>现代 JavaScript 提供了强大的 DOM 操作方法，使网页交互更加丰富。</p>
+            <code>document.getElementById("myElement");</code>
+            <code>element.addEventListener("click", function() { alert("Clicked!"); });</code>
+            <ul>
+                <li>元素选择</li>
+                <li>内容修改</li>
+                <li>事件处理</li>
+                <li>样式操作</li>
+                <li>元素创建和删除</li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>

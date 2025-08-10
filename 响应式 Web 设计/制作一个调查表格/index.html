@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>调查表格</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 id="title">免费代码训练营调查表格</h1>
+            <p id="description">感谢您花时间帮助我们改进平台</p>
+        </header>
+        
+        <form id="survey-form">
+            <div class="form-group">
+                <label id="name-label" for="name">姓名</label>
+                <input type="text" id="name" name="name" placeholder="请输入您的姓名" required>
+            </div>
+            
+            <div class="form-group">
+                <label id="email-label" for="email">邮箱</label>
+                <input type="email" id="email" name="email" placeholder="请输入您的邮箱地址" required>
+            </div>
+            
+            <div class="form-group">
+                <label id="number-label" for="number">年龄</label>
+                <input type="number" id="number" name="age" min="10" max="99" placeholder="请输入您的年龄" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="dropdown">您目前是什么角色？</label>
+                <select id="dropdown" name="role">
+                    <option disabled selected value>请选择一个选项</option>
+                    <option value="student">学生</option>
+                    <option value="full-time-job">全职工作</option>
+                    <option value="full-time-learner">全职学习者</option>
+                    <option value="prefer-not-to-say">不想说</option>
+                    <option value="other">其他</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <p>您会推荐免费代码训练营给朋友吗？</p>
+                <label>
+                    <input name="recommend" value="definitely" type="radio" class="input-radio">
+                    绝对会
+                </label>
+                <label>
+                    <input name="recommend" value="maybe" type="radio" class="input-radio">
+                    可能会
+                </label>
+                <label>
+                    <input name="recommend" value="not-sure" type="radio" class="input-radio">
+                    不确定
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <p>您希望在免费代码训练营中看到什么改进？</p>
+                <label>
+                    <input name="prefer" value="front-end-projects" type="checkbox" class="input-checkbox">
+                    前端项目
+                </label>
+                <label>
+                    <input name="prefer" value="back-end-projects" type="checkbox" class="input-checkbox">
+                    后端项目
+                </label>
+                <label>
+                    <input name="prefer" value="data-visualization" type="checkbox" class="input-checkbox">
+                    数据可视化
+                </label>
+                <label>
+                    <input name="prefer" value="challenges" type="checkbox" class="input-checkbox">
+                    挑战
+                </label>
+                <label>
+                    <input name="prefer" value="open-source-community" type="checkbox" class="input-checkbox">
+                    开源社区
+                </label>
+                <label>
+                    <input name="prefer" value="gitter-help-rooms" type="checkbox" class="input-checkbox">
+                    Gitter帮助房间
+                </label>
+                <label>
+                    <input name="prefer" value="videos" type="checkbox" class="input-checkbox">
+                    视频
+                </label>
+                <label>
+                    <input name="prefer" value="city-meetups" type="checkbox" class="input-checkbox">
+                    城市聚会
+                </label>
+                <label>
+                    <input name="prefer" value="wiki" type="checkbox" class="input-checkbox">
+                    Wiki
+                </label>
+                <label>
+                    <input name="prefer" value="forum" type="checkbox" class="input-checkbox">
+                    论坛
+                </label>
+                <label>
+                    <input name="prefer" value="additional-courses" type="checkbox" class="input-checkbox">
+                    额外课程
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <p>您有什么建议或评论吗？</p>
+                <textarea id="comments" name="comment" placeholder="在此输入您的评论..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" id="submit">提交</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

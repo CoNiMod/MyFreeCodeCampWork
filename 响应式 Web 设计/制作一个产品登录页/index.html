@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能手表 - 产品登录页</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header 部分 -->
+    <header id="header">
+        <img id="header-img" src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&h=100&fit=crop&crop=center" alt="智能手表Logo">
+        <nav id="nav-bar">
+            <a href="#features" class="nav-link">产品特性</a>
+            <a href="#video-section" class="nav-link">产品演示</a>
+            <a href="#pricing" class="nav-link">价格方案</a>
+        </nav>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main>
+        <!-- 英雄区域 -->
+        <section id="hero">
+            <div class="hero-content">
+                <h1>下一代智能手表</h1>
+                <p>突破性的健康监测技术，24/7全天候守护您的健康</p>
+                <a href="#pricing" class="cta-button">立即购买</a>
+            </div>
+        </section>
+
+        <!-- 产品特性 -->
+        <section id="features">
+            <div class="container">
+                <h2>产品特性</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">❤️</div>
+                        <div class="feature-content">
+                            <h3>心率监测</h3>
+                            <p>实时监测心率变化，异常情况及时提醒</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📱</div>
+                        <div class="feature-content">
+                            <h3>智能通知</h3>
+                            <p>来电、短信、应用通知，重要信息不错过</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🏃</div>
+                        <div class="feature-content">
+                            <h3>运动追踪</h3>
+                            <p>支持多种运动模式，精确记录运动数据</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🔋</div>
+                        <div class="feature-content">
+                            <h3>超长续航</h3>
+                            <p>一次充电可使用7天，告别频繁充电烦恼</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 产品演示视频 -->
+        <section id="video-section">
+            <div class="container">
+                <h2>产品演示</h2>
+                <div class="video-container">
+                    <iframe id="video" 
+                            src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                            title="智能手表产品演示"
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- 价格方案 -->
+        <section id="pricing">
+            <div class="container">
+                <h2>选择您的方案</h2>
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3>基础版</h3>
+                        <div class="price">¥999</div>
+                        <ul>
+                            <li>基础健康监测</li>
+                            <li>运动追踪</li>
+                            <li>智能通知</li>
+                            <li>7天续航</li>
+                        </ul>
+                        <button class="select-button">选择方案</button>
+                    </div>
+                    <div class="pricing-card featured">
+                        <h3>专业版</h3>
+                        <div class="price">¥1,499</div>
+                        <ul>
+                            <li>高级健康监测</li>
+                            <li>GPS定位</li>
+                            <li>音乐播放</li>
+                            <li>10天续航</li>
+                            <li>防水设计</li>
+                        </ul>
+                        <button class="select-button">选择方案</button>
+                    </div>
+                    <div class="pricing-card">
+                        <h3>旗舰版</h3>
+                        <div class="price">¥2,199</div>
+                        <ul>
+                            <li>全面健康监测</li>
+                            <li>心电图功能</li>
+                            <li>血氧监测</li>
+                            <li>14天续航</li>
+                            <li>钛合金表带</li>
+                        </ul>
+                        <button class="select-button">选择方案</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 联系表单 -->
+        <section id="contact">
+            <div class="container">
+                <h2>获取最新产品信息</h2>
+                <p>订阅我们的邮件列表，第一时间了解产品更新和优惠信息</p>
+                <form id="form" action="https://www.freecodecamp.com/email-submit">
+                    <input type="email" id="email" name="email" placeholder="请输入您的邮箱地址" required>
+                    <input type="submit" id="submit" value="订阅">
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="container">
+            <p>&copy; 2024 智能手表. 保留所有权利.</p>
+        </div>
+    </footer>
+</body>
+</html>

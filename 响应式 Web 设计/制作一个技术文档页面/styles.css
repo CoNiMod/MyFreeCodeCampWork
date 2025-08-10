@@ -1,0 +1,235 @@
+/* 重置默认样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+/* 导航栏样式 */
+#navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100vh;
+    background-color: #2c3e50;
+    color: white;
+    overflow-y: auto;
+    border-right: 2px solid #34495e;
+    z-index: 1000;
+}
+
+#navbar header {
+    padding: 20px;
+    background-color: #34495e;
+    border-bottom: 1px solid #5a6c7d;
+}
+
+#navbar header h1 {
+    font-size: 1.5rem;
+    text-align: center;
+    color: #ecf0f1;
+}
+
+#navbar .nav-link {
+    display: block;
+    padding: 15px 20px;
+    color: #bdc3c7;
+    text-decoration: none;
+    border-bottom: 1px solid #34495e;
+    transition: all 0.3s ease;
+}
+
+#navbar .nav-link:hover {
+    background-color: #34495e;
+    color: #ecf0f1;
+    padding-left: 25px;
+}
+
+/* 主要内容区域 */
+#main-doc {
+    margin-left: 300px;
+    padding: 20px 40px;
+    max-width: 1200px;
+}
+
+.main-section {
+    background-color: white;
+    margin-bottom: 30px;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #3498db;
+}
+
+.main-section header {
+    margin-bottom: 20px;
+}
+
+.main-section header h2 {
+    color: #2c3e50;
+    font-size: 2rem;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+.main-section p {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.main-section code {
+    display: inline-block;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: #e74c3c;
+    background-color: #fdf2f2;
+}
+
+.main-section ul {
+    margin: 15px 0;
+    padding-left: 30px;
+}
+
+.main-section li {
+    margin-bottom: 8px;
+    color: #555;
+    font-size: 1.05rem;
+}
+
+/* 代码块样式 */
+.main-section code:not(:only-child) {
+    display: block;
+    width: 100%;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* 响应式设计 - 媒体查询 */
+@media (max-width: 768px) {
+    #navbar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        max-height: 300px;
+    }
+    
+    #main-doc {
+        margin-left: 0;
+        padding: 20px;
+    }
+    
+    .main-section {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .main-section header h2 {
+        font-size: 1.5rem;
+    }
+    
+    #navbar header h1 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #main-doc {
+        padding: 15px;
+    }
+    
+    .main-section {
+        padding: 15px;
+    }
+    
+    .main-section header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .main-section p {
+        font-size: 1rem;
+    }
+    
+    .main-section code {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+}
+
+/* 平滑滚动 */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 链接样式 */
+a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* 代码高亮 */
+.main-section code {
+    position: relative;
+}
+
+.main-section code::before {
+    content: ">";
+    color: #95a5a6;
+    margin-right: 8px;
+}
+
+/* 列表样式增强 */
+.main-section ul {
+    list-style-type: none;
+}
+
+.main-section li::before {
+    content: "•";
+    color: #3498db;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
+/* 悬停效果 */
+.main-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+/* 导航栏滚动条样式 */
+#navbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+#navbar::-webkit-scrollbar-track {
+    background: #34495e;
+}
+
+#navbar::-webkit-scrollbar-thumb {
+    background: #5a6c7d;
+    border-radius: 3px;
+}
+
+#navbar::-webkit-scrollbar-thumb:hover {
+    background: #7f8c8d;
+}
