@@ -1,37 +1,18 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-数据图表浏览器
-使用 Python 创建的数据可视化工具，支持多种数据源和图表类型
-"""
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import requests
 import os
-from typing import List, Tuple, Optional, Union
-import warnings
-warnings.filterwarnings('ignore')
-
-# 设置中文字体
-plt.rcParams['font.sans-serif'] = ['SimHei', 'DejaVu Sans', 'Arial Unicode MS']
-plt.rcParams['axes.unicode_minus'] = False
 
 class DataChartExplorer:
-    """数据图表浏览器主类"""
-    
     def __init__(self):
-        """初始化数据图表浏览器"""
-        self.data = None
         self.df = None
         self.column_names = []
         self.current_columns = []
-        self.chart_type = 'scatter'
-        
-    def load_csv_from_upload(self) -> bool:
+
+    def load_csv_from_upload(self):
         """从本地上传CSV文件"""
-        print("\n📁 本地文件上传")
+        print("\n 本地文件上传")
         print("请将CSV文件拖拽到终端中，或输入完整路径:")
         
         try:
@@ -52,10 +33,10 @@ class DataChartExplorer:
         except Exception as e:
             print(f"❌ 加载文件失败: {e}")
             return False
-    
-    def load_csv_from_url_input(self) -> bool:
+
+    def load_csv_from_url_input(self):
         """从用户输入的URL获取CSV文件"""
-        print("\n🌐 从URL获取CSV文件")
+        print("\n 从URL获取CSV文件")
         print("请输入包含CSV文件的URL:")
         
         try:
@@ -85,18 +66,16 @@ class DataChartExplorer:
         except Exception as e:
             print(f"❌ 从URL加载失败: {e}")
             return False
-    
-    def load_csv_from_code_url(self) -> bool:
+
+    def load_csv_from_code_url(self):
         """从代码中预设的URL获取CSV文件"""
-        print("\n🔗 从预设URL获取CSV文件")
+        print("\n 从预设URL获取CSV文件")
         
         # 预设一些公开的CSV数据源
         sample_urls = {
-            '1': 'https://raw.githubusercontent.com/datasets/gdp/master/data/gdp.csv',
-            '2': 'https://raw.githubusercontent.com/datasets/population/master/data/population.csv',
-            '3': 'https://raw.githubusercontent.com/datasets/covid-19/master/data/countries-aggregated.csv',
-            '4': 'https://raw.githubusercontent.com/datasets/iris/master/data/iris.csv',
-            '5': 'https://raw.githubusercontent.com/datasets/automobile/master/data/automobile.csv'
+            '1': 'https://raw.githubusercontent.com/datasets/iris/master/data/iris.csv',
+            '2': 'https://raw.githubusercontent.com/datasets/covid-19/master/data/countries-aggregated.csv',
+            '3': 'https://raw.githubusercontent.com/datasets/gdp/master/data/gdp.csv'
         }
         
         print("可用的数据源:")
@@ -104,7 +83,7 @@ class DataChartExplorer:
             print(f"  {key}. {url.split('/')[-1]}")
         
         try:
-            choice = input("\n请选择数据源 (1-5): ").strip()
+            choice = input("\n请选择数据源 (1-3): ").strip()
             
             if choice not in sample_urls:
                 print("❌ 无效选择")
@@ -133,8 +112,8 @@ class DataChartExplorer:
         except Exception as e:
             print(f"❌ 加载预设数据失败: {e}")
             return False
-    
-    def process_dataframe(self) -> bool:
+
+    def process_dataframe(self):
         """处理数据帧，提取基本信息"""
         if self.df is None:
             print("❌ 没有数据可处理")
@@ -142,7 +121,7 @@ class DataChartExplorer:
             
         try:
             # 打印标题和前两行
-            print(f"\n📊 数据概览")
+            print(f"\n 数据概览")
             print(f"数据形状: {self.df.shape[0]} 行 × {self.df.shape[1]} 列")
             print(f"列名: {list(self.df.columns)}")
             
@@ -164,14 +143,14 @@ class DataChartExplorer:
         except Exception as e:
             print(f"❌ 处理数据失败: {e}")
             return False
-    
-    def select_columns(self) -> bool:
+
+    def select_columns(self):
         """选择要可视化的列"""
         if not self.column_names:
             print("❌ 没有可用的列")
             return False
             
-        print(f"\n📋 选择要可视化的列")
+        print(f"\n 选择要可视化的列")
         print("可用列:")
         for i, col in enumerate(self.column_names, 1):
             print(f"  {i}. {col}")
@@ -191,7 +170,7 @@ class DataChartExplorer:
                 # 单列可视化
                 self.current_columns = [col1]
                 print(f"✅ 选择单列: {col1}")
-            elif col1_idx < 0 or col1_idx >= len(self.column_names):
+            elif col2_idx < 0 or col2_idx >= len(self.column_names):
                 print("❌ 无效的列选择")
                 return False
             else:
@@ -210,8 +189,8 @@ class DataChartExplorer:
         except Exception as e:
             print(f"❌ 选择列失败: {e}")
             return False
-    
-    def convert_to_numpy(self) -> Tuple[np.ndarray, np.ndarray]:
+
+    def convert_to_numpy(self):
         """将选中的列转换为NumPy数组"""
         if not self.current_columns:
             print("❌ 没有选择列")
@@ -240,29 +219,26 @@ class DataChartExplorer:
         except Exception as e:
             print(f"❌ 转换为NumPy数组失败: {e}")
             return None, None
-    
-    def create_chart(self, x_data: np.ndarray, y_data: np.ndarray) -> bool:
+
+    def create_chart(self, x_data, y_data):
         """创建图表"""
         if x_data is None or y_data is None:
             return False
             
         try:
             # 选择图表类型
-            print(f"\n📈 选择图表类型:")
+            print(f"\n 选择图表类型:")
             print("1. 散点图 (Scatter Plot)")
             print("2. 线形图 (Line Plot)")
             
             choice = input("请选择 (1-2): ").strip()
             
             if choice == '1':
-                self.chart_type = 'scatter'
                 self._create_scatter_plot(x_data, y_data)
             elif choice == '2':
-                self.chart_type = 'line'
                 self._create_line_plot(x_data, y_data)
             else:
                 print("❌ 无效选择，使用默认散点图")
-                self.chart_type = 'scatter'
                 self._create_scatter_plot(x_data, y_data)
                 
             return True
@@ -270,8 +246,8 @@ class DataChartExplorer:
         except Exception as e:
             print(f"❌ 创建图表失败: {e}")
             return False
-    
-    def _create_scatter_plot(self, x_data: np.ndarray, y_data: np.ndarray):
+
+    def _create_scatter_plot(self, x_data, y_data):
         """创建散点图"""
         plt.figure(figsize=(12, 8))
         
@@ -291,8 +267,8 @@ class DataChartExplorer:
         plt.show()
         
         self._explain_scatter_plot()
-    
-    def _create_line_plot(self, x_data: np.ndarray, y_data: np.ndarray):
+
+    def _create_line_plot(self, x_data, y_data):
         """创建线形图"""
         plt.figure(figsize=(12, 8))
         
@@ -312,10 +288,10 @@ class DataChartExplorer:
         plt.show()
         
         self._explain_line_plot()
-    
+
     def _explain_scatter_plot(self):
         """解释散点图"""
-        print(f"\n📊 散点图分析:")
+        print(f"\n 散点图分析:")
         
         if len(self.current_columns) == 1:
             print(f"• 这是 {self.current_columns[0]} 列的散点图")
@@ -348,10 +324,10 @@ class DataChartExplorer:
                     print("• 中等相关性")
                 else:
                     print("• 弱相关性")
-    
+
     def _explain_line_plot(self):
         """解释线形图"""
-        print(f"\n📈 线形图分析:")
+        print(f"\n 线形图分析:")
         
         if len(self.current_columns) == 1:
             print(f"• 这是 {self.current_columns[0]} 列的时间序列图")
@@ -384,11 +360,11 @@ class DataChartExplorer:
                         print("• 整体呈下降趋势")
                     else:
                         print("• 整体趋势相对平稳")
-    
+
     def show_menu(self):
         """显示主菜单"""
         print("\n" + "="*60)
-        print("📊 数据图表浏览器")
+        print(" 数据图表浏览器")
         print("="*60)
         print("1. 从本地上传CSV文件")
         print("2. 从URL获取CSV文件")
@@ -400,7 +376,7 @@ class DataChartExplorer:
     
     def run(self):
         """运行数据图表浏览器"""
-        print("🚀 欢迎使用数据图表浏览器！")
+        print(" 欢迎使用数据图表浏览器！")
         print("这个工具可以帮助您分析和可视化CSV数据")
         
         while True:
@@ -437,14 +413,14 @@ class DataChartExplorer:
                                 self.create_chart(x_data, y_data)
                                 
                 elif choice == '6':
-                    print("👋 感谢使用数据图表浏览器！")
+                    print(" 感谢使用数据图表浏览器！")
                     break
                     
                 else:
                     print("❌ 无效选择，请输入1-6之间的数字")
                     
             except KeyboardInterrupt:
-                print("\n\n👋 程序被中断，再见！")
+                print("\n\n 程序被中断，再见！")
                 break
             except Exception as e:
                 print(f"❌ 发生错误: {e}")
